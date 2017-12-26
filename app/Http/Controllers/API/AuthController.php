@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignupFormRequest;
 use App\User;
-use Request;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -18,30 +20,39 @@ class AuthController extends Controller
     public function signup(SignupFormRequest $request)
     {
 
-    	// if(Request::wantsJson()){
-     //            return "AJAX";
-     //        }
-     //        return "HTTP";
-    	// $rules = [
-     //        'name' => 'required|string|max:255',
-     //        'email' => 'required|string|email|max:255|unique:users',
-     //        'password' => 'required|string|min:6|confirmed',
-     //    ];
+    	try {
+    		$user = new User;
+    		$user->name = $request->get('name');
+    		$user->email = $request->get('email');
+    		$user->password = \Hash::make($request->get('password'));
+    		$user->save();
 
-    	// try {
-    	// 	User::create($request->only('name', 'email', 'password'));
-    	// 	return response()->json([
-    	// 		'token' => '9120u08udihasjbdkhaskld'
-    	// 	], 201);
-    	// } catch (Exception $e) {
-    	// 	return response()->json([
-    	// 		'message' => 'Something went wrong. Please try again.'
-    	// 	], 503);
-    	// }
+    		return response()->json([
+    			'user' => $user
+    		], 201);
+    	} catch (Exception $e) {
+    		return response()->json([
+    			'message' => 'Something went wrong. Please try again.'
+    		], 503);
+    	}
     }
 
-    public function signin()
+    public function signin(Request $request)
     {
+    	// grab credentials from the request
+        $credentials = $request->only('email', 'password');
 
+        try {
+            // attempt to verify the credentials and create a token for the user
+            if (! $token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'Login credentials are incorrect.'], 401);
+            }
+            $name = User::whereEmail($request->get('email'))->limit(1)->first()->name;
+
+        } catch (JWTException $e) {
+            // something went wrong whilst attempting to encode the token
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
+        }
+        return response()->json(compact('token', 'name'));
     }
 }
