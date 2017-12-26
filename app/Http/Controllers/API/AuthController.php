@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignupFormRequest;
 use App\User;
-use Illuminate\Http\Request;
+use Request;
 
 class AuthController extends Controller
 {
@@ -15,8 +15,19 @@ class AuthController extends Controller
 	 * @param  Request $request [description]
 	 * @return [type]           [description]
 	 */
-    public function signup(Request $request)
+    public function signup(SignupFormRequest $request)
     {
+
+    	// if(Request::wantsJson()){
+     //            return "AJAX";
+     //        }
+     //        return "HTTP";
+    	// $rules = [
+     //        'name' => 'required|string|max:255',
+     //        'email' => 'required|string|email|max:255|unique:users',
+     //        'password' => 'required|string|min:6|confirmed',
+     //    ];
+
     	// try {
     	// 	User::create($request->only('name', 'email', 'password'));
     	// 	return response()->json([
