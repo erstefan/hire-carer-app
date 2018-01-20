@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace HireCarer\Http\Requests;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;

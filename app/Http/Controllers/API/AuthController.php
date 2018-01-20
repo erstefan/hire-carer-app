@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace HireCarer\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\SignupFormRequest;
-use App\User;
+use HireCarer\Http\Controllers\Controller;
+use HireCarer\Http\Requests\SignupFormRequest;
+use HireCarer\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -12,11 +12,11 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
 
-	/**
-	 * Sign up user
-	 * @param  Request $request [description]
-	 * @return [type]           [description]
-	 */
+    /**
+     * Sign up user
+     * @param SignupFormRequest $request [description]
+     * @return \Illuminate\Http\JsonResponse [type]           [description]
+     */
     public function signup(SignupFormRequest $request)
     {
 
@@ -37,6 +37,10 @@ class AuthController extends Controller
     	}
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function signin(Request $request)
     {
     	// grab credentials from the request
